@@ -4,8 +4,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MetaCortex.Orders.DataAcess.Entities;
 
-public class EntityBase : IEntity<ObjectId>
+public class EntityBase : IEntity<string>
 {
     [BsonId]
-    public ObjectId Id { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
 }
