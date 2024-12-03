@@ -1,5 +1,6 @@
 ﻿using MetaCortex.Orders.DataAcess;
 using MetaCortex.Orders.DataAcess.Entities;
+using MetaCortex.Orders.DataAcess.MessageBroker;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -37,8 +38,9 @@ namespace MetaCortex.Orders.API.Extensions
             }
             return Results.Ok(order);
         }
-        public static async Task<IResult> GetAllOrders(IOrderRepository repository)
+        public static async Task<IResult> GetAllOrders(IOrderRepository repository, IMessageProducerService messageProducerService)
         {
+            await messageProducerService.SendMessageAsync("bajsbajsbajs");
             var orders = await repository.GetAllOrders();
             return Results.Ok(orders);
         }
