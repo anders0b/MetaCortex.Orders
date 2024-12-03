@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35431.28
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaCortex.Orders.API", "MetaCortex.Orders.API\MetaCortex.Orders.API.csproj", "{3306F573-FC36-47F4-B694-D86F81945DF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaCortex.Orders.DataAcess", "MetaCortex.Orders.DataAcess\MetaCortex.Orders.DataAcess.csproj", "{220E3CAD-FE2F-4822-A931-1FF204CACC1C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3306F573-FC36-47F4-B694-D86F81945DF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3306F573-FC36-47F4-B694-D86F81945DF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3306F573-FC36-47F4-B694-D86F81945DF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3306F573-FC36-47F4-B694-D86F81945DF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{220E3CAD-FE2F-4822-A931-1FF204CACC1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{220E3CAD-FE2F-4822-A931-1FF204CACC1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{220E3CAD-FE2F-4822-A931-1FF204CACC1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{220E3CAD-FE2F-4822-A931-1FF204CACC1C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FA3F5159-3D79-4DC2-AE15-B8B597276863}
+	EndGlobalSection
+EndGlobal
