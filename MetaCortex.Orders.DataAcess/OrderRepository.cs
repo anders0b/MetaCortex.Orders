@@ -1,5 +1,4 @@
-﻿using MetaCortex.Orders.DataAccess.Entities;
-using MetaCortex.Orders.DataAcess.Entities;
+﻿using MetaCortex.Orders.DataAcess.Entities;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -33,8 +32,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task<Order> GetOrderById(string orderId)
     {
-        var filter = Builders<Order>.Filter.Eq("OrderId", ObjectId.Parse(orderId));
-        return await _orders.Find(filter).FirstOrDefaultAsync();
+        return await _orders.Find(p => p.Id == orderId).FirstOrDefaultAsync();
     }
 
     public async Task UpdateOrder(Order order)

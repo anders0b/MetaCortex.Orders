@@ -1,5 +1,6 @@
 ﻿using MetaCortex.Orders.DataAcess.MessageBroker;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,7 +15,9 @@ namespace MetaCortex.Orders.API.BackgroundServices
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _messageConsumerService.ReadMessageAsync();
+            Console.WriteLine("Message Consumer Hosted Service is running.");
+            //await _messageConsumerService.ReadMessageAsync();
+            await _messageConsumerService.ReadCustomerOrderAsync();
         }
     }
 }

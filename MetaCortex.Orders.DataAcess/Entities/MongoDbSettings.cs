@@ -1,4 +1,4 @@
-﻿namespace MetaCortex.Orders.DataAccess.Entities
+﻿namespace MetaCortex.Orders.DataAcess.Entities
 {
     public class MongoDbSettings
     {

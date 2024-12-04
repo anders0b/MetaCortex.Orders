@@ -2,5 +2,5 @@
 
 public interface IMessageProducerService
 {
-    Task SendMessageAsync<T>(T message);
+    Task SendMessageAsync<T>(T message, string routingKey);
 }

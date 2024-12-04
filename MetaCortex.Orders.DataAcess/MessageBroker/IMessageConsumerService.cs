@@ -3,4 +3,5 @@
 public interface IMessageConsumerService
 {
     Task ReadMessageAsync();
+    Task ReadCustomerOrderAsync();
 }

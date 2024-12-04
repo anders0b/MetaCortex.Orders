@@ -20,12 +20,13 @@ namespace MetaCortex.Orders.API.Extensions
             group.MapPut("{orderId}", UpdateOrder);
             return app;
         }
-        public static async Task<IResult> CreateOrder(IOrderRepository repository, Order order)
+        public static async Task<IResult> CreateOrder(IOrderRepository repository, IMessageProducerService producerService, Order order)
         {
             if(order == null)
             {
                 return Results.BadRequest("Order cannot be null");
             }
+            await producerService.SendMessageAsync(order, "order-to-payment");
             await repository.CreateOrder(order);
             return Results.Created($"/api/orders/{order.Id}", order);
         }
@@ -40,7 +41,6 @@ namespace MetaCortex.Orders.API.Extensions
         }
         public static async Task<IResult> GetAllOrders(IOrderRepository repository, IMessageProducerService messageProducerService)
         {
-            await messageProducerService.SendMessageAsync("bajsbajsbajs");
             var orders = await repository.GetAllOrders();
             return Results.Ok(orders);
         }
