@@ -27,6 +27,7 @@ namespace MetaCortex.Orders.API.Extensions
                 return Results.BadRequest("Order cannot be null");
             }
             await producerService.SendMessageAsync(order, "order-to-payment");
+            await producerService.SendMessageAsync(order, "order-to-customer");
             await repository.CreateOrder(order);
             return Results.Created($"/api/orders/{order.Id}", order);
         }
@@ -49,16 +50,21 @@ namespace MetaCortex.Orders.API.Extensions
             await repository.DeleteOrder(orderId);
             return Results.NoContent();
         }
-        public static async Task<IResult> UpdateOrder(IOrderRepository repository, string orderId, Order order)
+        public static async Task<IResult> UpdateOrder(IOrderRepository repository, IMessageProducerService producerService, string orderId, Order order)
         {
             if (order == null)
             {
                 return Results.BadRequest("Order cannot be null");
             }
             var existingOrder = await repository.GetOrderById(orderId);
+
             if (existingOrder == null)
             {
                 return Results.NotFound();
+            }
+            if(order.IsPaid == true)
+            {
+                await producerService.SendMessageAsync(order, "order-to-products");
             }
             order.Id = existingOrder.Id;
             await repository.UpdateOrder(order);

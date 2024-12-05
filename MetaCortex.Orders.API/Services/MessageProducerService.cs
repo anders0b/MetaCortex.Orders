@@ -40,7 +40,6 @@ namespace MetaCortex.Orders.API.Services
                                  routingKey: routingKey,
                                  body: body);
 
-            //persistent ??
             Console.WriteLine($"Sent {message} to {routingKey}");
 
         }

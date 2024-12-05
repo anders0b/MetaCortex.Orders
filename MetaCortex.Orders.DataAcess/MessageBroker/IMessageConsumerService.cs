@@ -2,6 +2,5 @@
 
 public interface IMessageConsumerService
 {
-    Task ReadMessageAsync();
-    Task ReadCustomerOrderAsync();
+    Task ReadMessageAsync(string queueName, Func<string, Task> messageHandler);
 }
