@@ -4,6 +4,7 @@ WORKDIR /App
 COPY ./MetaCortex.Orders.sln ./
 
 COPY ./MetaCortex.Orders.API/MetaCortex.Orders.API.csproj ./MetaCortex.Orders.API/
+COPY ./MetaCortex.Orders.DataAcess/MetaCortex.Orders.DataAcess.csproj ./MetaCortex.Orders.DataAcess/
 RUN dotnet restore MetaCortex.Orders.sln
 
 COPY ./ ./
