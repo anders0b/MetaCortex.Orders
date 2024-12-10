@@ -1,10 +1,10 @@
-﻿using DnsClient.Internal;
-using MetaCortex.Orders.DataAcess;
+﻿using MetaCortex.Orders.DataAcess;
 using MetaCortex.Orders.DataAcess.Entities;
 using MetaCortex.Orders.DataAcess.MessageBroker;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using System;
 using System.Threading.Tasks;
 
 namespace MetaCortex.Orders.API.Extensions
@@ -21,7 +21,7 @@ namespace MetaCortex.Orders.API.Extensions
             group.MapPut("{orderId}", UpdateOrder);
             return app;
         }
-        public static async Task<IResult> CreateOrder(IOrderRepository repository, IMessageProducerService producerService, Order order, ILogger logger)
+        public static async Task<IResult> CreateOrder(IOrderRepository repository, IMessageProducerService producerService, Order order)
         {
             if(order == null)
             {
@@ -29,10 +29,10 @@ namespace MetaCortex.Orders.API.Extensions
             }
 
             await producerService.SendMessageAsync(order, "order-to-payment");
-            logger.LogInformation("Order sent to Payment-channel");
+            Console.WriteLine("Order sent to Payment-channel");
 
             await producerService.SendMessageAsync(order, "order-to-customer");
-            logger.LogInformation("Order sent to Customer-channel");
+            Console.WriteLine("Order sent to Customer-channel");
 
             await repository.CreateOrder(order);
             return Results.Created($"/api/orders/{order.Id}", order);

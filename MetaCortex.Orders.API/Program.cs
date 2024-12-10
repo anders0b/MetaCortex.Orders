@@ -7,6 +7,7 @@ using MetaCortex.Orders.DataAcess.Entities;
 using MetaCortex.Orders.DataAcess.MessageBroker;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -22,21 +23,29 @@ builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
 
 builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
 
+builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMqSettings"));
 
-builder.Services.AddSingleton(sp => new RabbitMqConfiguration()
+builder.Services.AddSingleton(sp =>
 {
-    HostName = "localhost",
-    UserName = "guest",
-    Password = "guest"
+    var rabbit = sp.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
+
+    return new RabbitMqConfiguration()
+    {
+        HostName = rabbit.HostName,
+        UserName = rabbit.UserName,
+        Password = rabbit.Password
+    };
 });
 
-builder.Services.AddSingleton<ObjectConverterService>();
+builder.Services.AddSingleton<ILogger<ObjectConverterService>, Logger<ObjectConverterService>>();
+
 builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
 builder.Services.AddSingleton<IMessageProducerService, MessageProducerService>();
 builder.Services.AddSingleton<IMessageConsumerService, MessageConsumerService>();
 
 builder.Services.AddHostedService<MessageConsumerHostedService>();
 
+builder.Services.AddLogging();
 
 var app = builder.Build();
 
