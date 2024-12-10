@@ -1,10 +1,12 @@
-﻿using MetaCortex.Orders.DataAcess;
+﻿using MetaCortex.Orders.API.DTOs;
+using MetaCortex.Orders.DataAcess;
 using MetaCortex.Orders.DataAcess.Entities;
 using MetaCortex.Orders.DataAcess.MessageBroker;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MetaCortex.Orders.API.Extensions
@@ -28,13 +30,14 @@ namespace MetaCortex.Orders.API.Extensions
                 return Results.BadRequest("Order cannot be null");
             }
 
-            await producerService.SendMessageAsync(order, "order-to-payment");
+            var addedOrder = await repository.CreateOrder(order);
+
+            await producerService.SendMessageAsync(addedOrder, "order-to-payment");
             Console.WriteLine("Order sent to Payment-channel");
 
-            await producerService.SendMessageAsync(order, "order-to-customer");
+            await producerService.SendMessageAsync(addedOrder, "order-to-customer");
             Console.WriteLine("Order sent to Customer-channel");
 
-            await repository.CreateOrder(order);
             return Results.Created($"/api/orders/{order.Id}", order);
         }
 

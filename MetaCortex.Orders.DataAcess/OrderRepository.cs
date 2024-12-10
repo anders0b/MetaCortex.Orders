@@ -14,9 +14,10 @@ public class OrderRepository : IOrderRepository
         var database = mongoClient.GetDatabase(settings.DatabaseName);
         _orders = database.GetCollection<Order>(settings.CollectionName, new MongoCollectionSettings { AssignIdOnInsert = true});
     }
-    public async Task CreateOrder(Order order)
+    public async Task<Order> CreateOrder(Order order)
     {
         await _orders.InsertOneAsync(order);
+        return order;
     }
 
     public async Task DeleteOrder(string orderId)

@@ -37,8 +37,8 @@ namespace MetaCortex.Orders.API.Services
             {
                 var body = ea.Body.ToArray();
                 var message = System.Text.Encoding.UTF8.GetString(body);
-                await messageHandler(message);
                 _logger.LogInformation($"Recieved {message} from {queueName}");
+                await messageHandler(message);
             };
 
             await _channel.BasicConsumeAsync(queue: queueName,
