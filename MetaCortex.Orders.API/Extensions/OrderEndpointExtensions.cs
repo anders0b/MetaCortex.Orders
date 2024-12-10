@@ -1,4 +1,5 @@
-﻿using MetaCortex.Orders.DataAcess;
+﻿using DnsClient.Internal;
+using MetaCortex.Orders.DataAcess;
 using MetaCortex.Orders.DataAcess.Entities;
 using MetaCortex.Orders.DataAcess.MessageBroker;
 using Microsoft.AspNetCore.Builder;
@@ -20,17 +21,23 @@ namespace MetaCortex.Orders.API.Extensions
             group.MapPut("{orderId}", UpdateOrder);
             return app;
         }
-        public static async Task<IResult> CreateOrder(IOrderRepository repository, IMessageProducerService producerService, Order order)
+        public static async Task<IResult> CreateOrder(IOrderRepository repository, IMessageProducerService producerService, Order order, ILogger logger)
         {
             if(order == null)
             {
                 return Results.BadRequest("Order cannot be null");
             }
+
             await producerService.SendMessageAsync(order, "order-to-payment");
+            logger.LogInformation("Order sent to Payment-channel");
+
             await producerService.SendMessageAsync(order, "order-to-customer");
+            logger.LogInformation("Order sent to Customer-channel");
+
             await repository.CreateOrder(order);
             return Results.Created($"/api/orders/{order.Id}", order);
         }
+
         public static async Task<IResult> GetOrderById(IOrderRepository repository, string orderId)
         {
             var order = await repository.GetOrderById(orderId);

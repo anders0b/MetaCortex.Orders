@@ -1,6 +1,8 @@
-﻿using MetaCortex.Orders.API.InterfaceM;
+﻿using DnsClient.Internal;
+using MetaCortex.Orders.API.InterfaceM;
 using MetaCortex.Orders.DataAcess;
 using MetaCortex.Orders.DataAcess.MessageBroker;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -12,11 +14,13 @@ namespace MetaCortex.Orders.API.Services
     {
         private readonly IConnection _connection;
         private IChannel _channel;
+        private readonly ILogger<MessageConsumerService> _logger;
 
-        public MessageConsumerService(IRabbitMqService rabbitMqService, IOrderRepository repository)
+        public MessageConsumerService(IRabbitMqService rabbitMqService, IOrderRepository repository, ILogger<MessageConsumerService> logger)
         {
             _connection = rabbitMqService.CreateConnection().Result;
             _channel = _connection.CreateChannelAsync().Result;
+            _logger = logger;
         }
 
         public async Task ReadMessageAsync(string queueName, Func<string, Task> messageHandler)
@@ -34,12 +38,14 @@ namespace MetaCortex.Orders.API.Services
                 var body = ea.Body.ToArray();
                 var message = System.Text.Encoding.UTF8.GetString(body);
                 await messageHandler(message);
-                Console.WriteLine($"Recieved {message}");
+                _logger.LogInformation($"Recieved {message} from {queueName}");
             };
 
             await _channel.BasicConsumeAsync(queue: queueName,
                      autoAck: true,
                      consumer: consumer);
+
+            _logger.LogInformation($"Consumed message");
 
             await Task.CompletedTask;
         }
