@@ -33,7 +33,7 @@ namespace MetaCortex.Orders.API.Extensions
             var addedOrder = await repository.CreateOrder(order);
 
             await producerService.SendMessageAsync(addedOrder, "order-to-customer");
-            Console.WriteLine("Order sent to Customer-channel");
+            Console.WriteLine($"Order: {addedOrder.Id} sent to Customer-channel");
 
             return Results.Created($"/api/orders/{addedOrder.Id}", addedOrder);
         }
