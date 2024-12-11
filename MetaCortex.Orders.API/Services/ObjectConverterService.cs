@@ -43,7 +43,7 @@ public class ObjectConverterService
 
         var finalOrderDto = JsonSerializer.Deserialize<OrderDTO>(order) ?? throw new InvalidOperationException("Failed to deserialize order");
 
-        var originalOrder = await _repository.GetOrderById(finalOrderDto.Payment.OrderId) ?? throw new InvalidOperationException("Order not found");
+        var originalOrder = await _repository.GetOrderById(finalOrderDto.OrderId) ?? throw new InvalidOperationException("Order not found");
 
         originalOrder.IsPaid = finalOrderDto.Payment.IsPaid;
 
