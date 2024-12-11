@@ -1,5 +1,6 @@
 ﻿using MetaCortex.Orders.API.DTOs;
 using MetaCortex.Orders.DataAcess;
+using MetaCortex.Orders.DataAcess.Entities;
 using MetaCortex.Orders.DataAcess.MessageBroker;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,15 +24,15 @@ public class ObjectConverterService
     {
         if(string.IsNullOrEmpty(order)) throw new ArgumentException("Order Id cannot be null", nameof(order));
 
-        var orderDto = JsonSerializer.Deserialize<VIPOrderDTO>(order) ?? throw new InvalidOperationException("Failed to deserialize order");
+        var orderDto = JsonSerializer.Deserialize<Order>(order) ?? throw new InvalidOperationException("Failed to deserialize order");
 
         var originalOrder = await _repository.GetOrderById(orderDto.Id) ?? throw new InvalidOperationException("Order not found");
             
-        originalOrder.VIPStatus = orderDto.IsVIP;
+        originalOrder.VIPStatus = orderDto.VIPStatus;
 
         await _repository.UpdateOrder(originalOrder);
 
-        _logger.LogInformation($"VIP status is: {orderDto.IsVIP}. Updated for order {orderDto.Id}");
+        _logger.LogInformation($"VIP status is: {orderDto.VIPStatus}. Updated for order {orderDto.Id}");
 
         await _producerService.SendMessageAsync(originalOrder, "order-to-payment");
         _logger.LogInformation("Order sent to Payment-channel");
