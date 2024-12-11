@@ -51,7 +51,10 @@ public class ObjectConverterService
 
         await _repository.UpdateOrder(originalOrder);
 
-        _logger.LogInformation($"Final order saved {finalOrderDto.Payment.OrderId}");
+        _logger.LogInformation($"Final order saved {finalOrderDto.Payment.OrderId}. Sending {originalOrder.Id} to Product");
+
+        await _producerService.SendMessageAsync(originalOrder, "order-to-products");
+        _logger.LogInformation($"Sent {originalOrder.Id} to Product-queue");
 
     }
 }

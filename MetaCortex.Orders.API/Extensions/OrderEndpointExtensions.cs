@@ -69,10 +69,6 @@ namespace MetaCortex.Orders.API.Extensions
             {
                 return Results.NotFound();
             }
-            if(order.IsPaid == true)
-            {
-                await producerService.SendMessageAsync(order, "order-to-products");
-            }
             order.Id = existingOrder.Id;
             await repository.UpdateOrder(order);
             return Results.Ok(order);
