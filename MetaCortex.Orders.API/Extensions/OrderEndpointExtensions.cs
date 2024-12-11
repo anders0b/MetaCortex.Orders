@@ -35,7 +35,7 @@ namespace MetaCortex.Orders.API.Extensions
             await producerService.SendMessageAsync(addedOrder, "order-to-customer");
             Console.WriteLine("Order sent to Customer-channel");
 
-            return Results.Created($"/api/orders/{order.Id}", order);
+            return Results.Created($"/api/orders/{addedOrder.Id}", addedOrder);
         }
 
         public static async Task<IResult> GetOrderById(IOrderRepository repository, string orderId)

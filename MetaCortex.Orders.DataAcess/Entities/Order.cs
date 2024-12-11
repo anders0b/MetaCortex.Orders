@@ -8,6 +8,6 @@ namespace MetaCortex.Orders.DataAcess.Entities
         public string PaymentMethod { get; set; }
         public bool IsPaid { get; set; }
         public bool VIPStatus { get; set; }
-        public List<string> Products { get; set; }
+        public List<Product> Products { get; set; }
     }
 }
