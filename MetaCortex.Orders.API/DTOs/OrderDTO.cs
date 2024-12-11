@@ -16,8 +16,7 @@ namespace MetaCortex.Orders.API.DTOs
     }
     public class PaymentDTO
     {
-        public string Id { get; set; }
-        public string PaymentMethod { get; set; }
+        public string PaymentMethod { get; set; } //fånga upp denna
         public bool IsPaid { get; set; } //fånga upp denna
 
     }
