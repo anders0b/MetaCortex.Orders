@@ -6,7 +6,7 @@ namespace MetaCortex.Orders.API.DTOs
 {
     public class OrderDTO
     {
-        public string OrderId { get; set; }
+        public string Id { get; set; }
         public DateTime OrderDate { get; set; }
         public string CustomerId { get; set; }
         public PaymentDTO Payment { get; set; }
@@ -16,7 +16,7 @@ namespace MetaCortex.Orders.API.DTOs
     }
     public class PaymentDTO
     {
-        public string OrderId { get; set; }
+        public string Id { get; set; }
         public string PaymentMethod { get; set; }
         public bool IsPaid { get; set; } //fånga upp denna
 

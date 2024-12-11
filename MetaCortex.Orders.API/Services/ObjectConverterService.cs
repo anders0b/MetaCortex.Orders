@@ -44,7 +44,7 @@ public class ObjectConverterService
 
         var finalOrderDto = JsonSerializer.Deserialize<OrderDTO>(order) ?? throw new InvalidOperationException("Failed to deserialize order");
 
-        var originalOrder = await _repository.GetOrderById(finalOrderDto.OrderId) ?? throw new InvalidOperationException("Order not found");
+        var originalOrder = await _repository.GetOrderById(finalOrderDto.Id) ?? throw new InvalidOperationException("Order not found");
 
         originalOrder.IsPaid = finalOrderDto.Payment.IsPaid;
 
@@ -52,10 +52,9 @@ public class ObjectConverterService
 
         await _repository.UpdateOrder(originalOrder);
 
-        _logger.LogInformation($"Final order saved {finalOrderDto.Payment.OrderId}. Sending {originalOrder.Id} to Product");
+        _logger.LogInformation($"Final order saved {finalOrderDto.Id}. Sending {originalOrder.Id} to Product");
 
         await _producerService.SendMessageAsync(originalOrder, "order-to-products");
         _logger.LogInformation($"Sent {originalOrder.Id} to Product-queue");
-
     }
 }
