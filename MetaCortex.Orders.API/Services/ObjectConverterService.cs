@@ -1,5 +1,6 @@
 ﻿using MetaCortex.Orders.API.DTOs;
 using MetaCortex.Orders.DataAcess;
+using MetaCortex.Orders.DataAcess.MessageBroker;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Text.Json;
@@ -11,10 +12,12 @@ public class ObjectConverterService
 {
     private readonly IOrderRepository _repository;
     private readonly ILogger<ObjectConverterService> _logger;
-    public ObjectConverterService(IOrderRepository repository, ILogger<ObjectConverterService> logger)
+    private readonly IMessageProducerService _producerService;
+    public ObjectConverterService(IOrderRepository repository, ILogger<ObjectConverterService> logger, IMessageProducerService producerService)
     {
         _repository = repository;
         _logger = logger;
+        _producerService = producerService;
     }
     public async Task CheckVIP(string order)
     {
@@ -28,7 +31,10 @@ public class ObjectConverterService
 
         await _repository.UpdateOrder(originalOrder);
 
-        _logger.LogInformation($"VIP status updated for order {orderDto.Id}");
+        _logger.LogInformation($"VIP status is: {orderDto.IsVIP}. Updated for order {orderDto.Id}");
+
+        await _producerService.SendMessageAsync(originalOrder, "order-to-payment");
+        _logger.LogInformation("Order sent to Payment-channel");
     }
 
     public async Task SaveFinalOrderFromPayment(string order)

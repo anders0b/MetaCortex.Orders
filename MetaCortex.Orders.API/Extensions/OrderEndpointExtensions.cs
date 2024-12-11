@@ -32,9 +32,6 @@ namespace MetaCortex.Orders.API.Extensions
 
             var addedOrder = await repository.CreateOrder(order);
 
-            await producerService.SendMessageAsync(addedOrder, "order-to-payment");
-            Console.WriteLine("Order sent to Payment-channel");
-
             await producerService.SendMessageAsync(addedOrder, "order-to-customer");
             Console.WriteLine("Order sent to Customer-channel");
 

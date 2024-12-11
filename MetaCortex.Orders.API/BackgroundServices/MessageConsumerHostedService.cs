@@ -12,15 +12,17 @@ namespace MetaCortex.Orders.API.BackgroundServices
     public class MessageConsumerHostedService : BackgroundService
     {
         private readonly IMessageConsumerService _messageConsumerService;
+        private readonly IMessageProducerService _producerService;
         private readonly ObjectConverterService _objectConverterService;
         private readonly IOrderRepository _repository;
         private readonly ILogger<ObjectConverterService> _logger;
-        public MessageConsumerHostedService(IMessageConsumerService messageConsumerService, IOrderRepository repository, ILogger<ObjectConverterService> logger)
+        public MessageConsumerHostedService(IMessageConsumerService messageConsumerService, IOrderRepository repository, ILogger<ObjectConverterService> logger, IMessageProducerService producerService)
         {
             _messageConsumerService = messageConsumerService;
             _repository = repository;
             _logger = logger;
-            _objectConverterService = new ObjectConverterService(repository, logger);
+            _producerService = producerService;
+            _objectConverterService = new ObjectConverterService(repository, logger, producerService);
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
