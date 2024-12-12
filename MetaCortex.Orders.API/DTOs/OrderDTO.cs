@@ -9,14 +9,14 @@ namespace MetaCortex.Orders.API.DTOs
         public string Id { get; set; }
         public DateTime OrderDate { get; set; }
         public string CustomerId { get; set; }
-        public PaymentDTO Payment { get; set; }
+        public PaymentDTO Payment { get; set; } 
         public bool VIPStatus { get; set; }
-        
+        public List<Product> Products { get; set; }
+
     }
     public class PaymentDTO
     {
         public string PaymentMethod { get; set; } //fånga upp denna
         public bool IsPaid { get; set; } //fånga upp denna
-
     }
 }
