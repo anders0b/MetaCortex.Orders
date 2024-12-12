@@ -9,7 +9,7 @@ namespace MetaCortex.Orders.API.DTOs
         public string Id { get; set; }
         public DateTime OrderDate { get; set; }
         public string CustomerId { get; set; }
-        public PaymentDTO Payment { get; set; } 
+        public PaymentDTO PaymentPlan { get; set; } 
         public bool VIPStatus { get; set; }
         public List<Product> Products { get; set; }
 

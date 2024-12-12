@@ -46,9 +46,9 @@ public class ObjectConverterService
 
         var originalOrder = await _repository.GetOrderById(finalOrderDto.Id) ?? throw new InvalidOperationException("Order not found");
 
-        originalOrder.IsPaid = finalOrderDto.Payment.IsPaid;
+        originalOrder.IsPaid = finalOrderDto.PaymentPlan.IsPaid;
 
-        originalOrder.PaymentMethod = finalOrderDto.Payment.PaymentMethod;
+        originalOrder.PaymentMethod = finalOrderDto.PaymentPlan.PaymentMethod;
 
         await _repository.UpdateOrder(originalOrder);
 
