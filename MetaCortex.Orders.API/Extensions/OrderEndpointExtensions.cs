@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MetaCortex.Orders.API.Extensions
@@ -33,7 +32,7 @@ namespace MetaCortex.Orders.API.Extensions
             var addedOrder = await repository.CreateOrder(order);
 
             await producerService.SendMessageAsync(addedOrder, "order-to-customer");
-            Console.WriteLine($"Order: {addedOrder.Id} sent to Customer-channel");
+            Console.WriteLine($"Order: {addedOrder.Id} with Customer ID: {addedOrder.CustomerId} sent to Customer-channel");
 
             return Results.Created($"/api/orders/{addedOrder.Id}", addedOrder);
         }

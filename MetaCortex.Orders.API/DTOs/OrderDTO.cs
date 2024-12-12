@@ -11,7 +11,6 @@ namespace MetaCortex.Orders.API.DTOs
         public string CustomerId { get; set; }
         public PaymentDTO Payment { get; set; }
         public bool VIPStatus { get; set; }
-        public List<string> Products { get; set; }
         
     }
     public class PaymentDTO
