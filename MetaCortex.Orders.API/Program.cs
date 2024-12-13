@@ -37,7 +37,7 @@ builder.Services.AddSingleton(sp =>
     };
 });
 
-builder.Services.AddSingleton<ILogger<ObjectConverterService>, Logger<ObjectConverterService>>();
+builder.Services.AddSingleton<ILogger<OrderUpdaterService>, Logger<OrderUpdaterService>>();
 
 builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
 builder.Services.AddSingleton<IMessageProducerService, MessageProducerService>();

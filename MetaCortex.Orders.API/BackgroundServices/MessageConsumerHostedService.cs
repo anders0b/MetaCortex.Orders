@@ -13,16 +13,16 @@ namespace MetaCortex.Orders.API.BackgroundServices
     {
         private readonly IMessageConsumerService _messageConsumerService;
         private readonly IMessageProducerService _producerService;
-        private readonly ObjectConverterService _objectConverterService;
+        private readonly OrderUpdaterService _objectConverterService;
         private readonly IOrderRepository _repository;
-        private readonly ILogger<ObjectConverterService> _logger;
-        public MessageConsumerHostedService(IMessageConsumerService messageConsumerService, IOrderRepository repository, ILogger<ObjectConverterService> logger, IMessageProducerService producerService)
+        private readonly ILogger<OrderUpdaterService> _logger;
+        public MessageConsumerHostedService(IMessageConsumerService messageConsumerService, IOrderRepository repository, ILogger<OrderUpdaterService> logger, IMessageProducerService producerService)
         {
             _messageConsumerService = messageConsumerService;
             _repository = repository;
             _logger = logger;
             _producerService = producerService;
-            _objectConverterService = new ObjectConverterService(repository, logger, producerService);
+            _objectConverterService = new OrderUpdaterService(repository, logger, producerService);
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -34,13 +34,13 @@ namespace MetaCortex.Orders.API.BackgroundServices
                 {
                     if(queueName == "customer-to-order")
                     {
-                        _logger.LogInformation($"Message from {queueName}. Delivering message: {message} to CheckVIP");
-                        await _objectConverterService.CheckVIP(message);
+                        _logger.LogInformation($"[INCOMING] Message from {queueName}. {message} going to UpdateOrderVIPStatus");
+                        await _objectConverterService.UpdateOrderVipStatus(message);
                     }
                     else if (queueName == "payment-to-order")
                     {
-                        _logger.LogInformation($"Message from {queueName}. Delivering message: {message} to SaveFinalOrder");
-                        await _objectConverterService.SaveFinalOrderFromPayment(message);
+                        _logger.LogInformation($"[INCOMING] Message from {queueName}. {message} going to UpdateOrderPaymentStatus");
+                        await _objectConverterService.UpdateOrderPaymentStatus(message);
                     }
                 });
             }

@@ -30,9 +30,10 @@ namespace MetaCortex.Orders.API.Extensions
             }
 
             var addedOrder = await repository.CreateOrder(order);
+            Console.WriteLine($"[INFO] Order: {addedOrder.Id} created and saved to database");
 
             await producerService.SendMessageAsync(addedOrder, "order-to-customer");
-            Console.WriteLine($"Order: {addedOrder.Id} with Customer ID: {addedOrder.CustomerId} sent to Customer-channel");
+            Console.WriteLine($"[OUTGOING] Order: {addedOrder.Id} with Customer ID: {addedOrder.CustomerId} sent to Customer-channel for VIP-status check");
 
             return Results.Created($"/api/orders/{addedOrder.Id}", addedOrder);
         }

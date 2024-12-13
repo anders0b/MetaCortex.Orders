@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace MetaCortex.Orders.API.Services;
 
-public class ObjectConverterService
+public class OrderUpdaterService
 {
     private readonly IOrderRepository _repository;
-    private readonly ILogger<ObjectConverterService> _logger;
+    private readonly ILogger<OrderUpdaterService> _logger;
     private readonly IMessageProducerService _producerService;
-    public ObjectConverterService(IOrderRepository repository, ILogger<ObjectConverterService> logger, IMessageProducerService producerService)
+    public OrderUpdaterService(IOrderRepository repository, ILogger<OrderUpdaterService> logger, IMessageProducerService producerService)
     {
         _repository = repository;
         _logger = logger;
         _producerService = producerService;
     }
-    public async Task CheckVIP(string order)
+    public async Task UpdateOrderVipStatus(string order)
     {
         if(string.IsNullOrEmpty(order)) throw new ArgumentException("Order Id cannot be null", nameof(order));
 
@@ -32,13 +32,13 @@ public class ObjectConverterService
 
         await _repository.UpdateOrder(originalOrder);
 
-        _logger.LogInformation($"VIP status is: {orderDto.VIPStatus}. Updated for order {orderDto.Id}");
+        _logger.LogInformation($"[INFO] VIP status is: {orderDto.VIPStatus}. Updated for order {orderDto.Id}");
 
         await _producerService.SendMessageAsync(originalOrder, "order-to-payment");
-        _logger.LogInformation("Order sent to Payment-channel");
+        _logger.LogInformation($"[OUTGOING] Order {originalOrder.Id} sent to Payment-channel");
     }
 
-    public async Task SaveFinalOrderFromPayment(string order)
+    public async Task UpdateOrderPaymentStatus(string order)
     {
         if(string.IsNullOrEmpty(order)) throw new ArgumentException("Order Id cannot be null", nameof(order));
 
@@ -52,9 +52,10 @@ public class ObjectConverterService
 
         await _repository.UpdateOrder(originalOrder);
 
-        _logger.LogInformation($"Final order saved to DB with ID: {finalOrderDto.Id}. Sending {originalOrder.Id} to Product-queue");
+        _logger.LogInformation($"[INFO] Payment completed. Order: {finalOrderDto.Id} is to be sent out for delivery. Sending {originalOrder.Id} to Product-queue");
+
 
         await _producerService.SendMessageAsync(originalOrder.Products, "order-to-products");
-        _logger.LogInformation($"Sent {originalOrder.Id} to Product-queue");
+        _logger.LogInformation($"[OUTGOING] Sending order products from order: {originalOrder.Id} to Products-queue");
     }
 }
