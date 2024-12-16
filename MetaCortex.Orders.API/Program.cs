@@ -1,5 +1,6 @@
 using MetaCortex.Orders.API.BackgroundServices;
 using MetaCortex.Orders.API.Extensions;
+using MetaCortex.Orders.API.Interface;
 using MetaCortex.Orders.API.InterfaceM;
 using MetaCortex.Orders.API.Services;
 using MetaCortex.Orders.DataAcess;
@@ -37,7 +38,7 @@ builder.Services.AddSingleton(sp =>
     };
 });
 
-builder.Services.AddSingleton<ILogger<OrderUpdaterService>, Logger<OrderUpdaterService>>();
+builder.Services.AddSingleton<ILogger<IOrderUpdaterService>, Logger<OrderUpdaterService>>();
 
 builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
 builder.Services.AddSingleton<IMessageProducerService, MessageProducerService>();

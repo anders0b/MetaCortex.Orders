@@ -1,4 +1,5 @@
 ﻿using MetaCortex.Orders.API.DTOs;
+using MetaCortex.Orders.API.Interface;
 using MetaCortex.Orders.DataAcess;
 using MetaCortex.Orders.DataAcess.Entities;
 using MetaCortex.Orders.DataAcess.MessageBroker;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MetaCortex.Orders.API.Services;
 
-public class OrderUpdaterService
+public class OrderUpdaterService : IOrderUpdaterService
 {
     private readonly IOrderRepository _repository;
     private readonly ILogger<OrderUpdaterService> _logger;
