@@ -1,191 +1,104 @@
-# OrderService API Documentation
+# Order API Specification
 
-### Base URL
-`http://<your-server-url>/api/orders`
+## Overview
+This document describes the API for managing orders in the system. The API allows clients to create, retrieve, update, and delete orders.
 
----
+## Endpoints
 
-## 1. Create an Order
+### `POST /api/orders`
+**Summary**: Create a new order.
 
-- **Endpoint**: `POST /api/orders`
-- **Description**: Creates a new order.
-- **Request Body**:  
-  - **Content-Type**: `application/json`
-  - **Body Example**:  
-    ```json
-    {
-        "orderDate": "2024-12-03T14:30:00",
-        "customerId": "12345",
-        "paymentStatus": true,
-        "shippingStatus": false,
-        "products": ["Product1", "Product2"]
-    }
-    ```
+#### Request Body
+- **Content-Type**: `application/json`
+- **Schema**: [Order](#order-schema)
 
-- **Response**:
-  - **Status Code**: `201 Created`
-  - **Location**: `/api/orders/{orderId}`
-  - **Response Body Example**:
-    ```json
-    {
-        "orderId": "64d2f6ae3f15c9a2e47a9f01",
-        "orderDate": "2024-12-03T14:30:00",
-        "customerId": "12345",
-        "paymentStatus": true,
-        "shippingStatus": false,
-        "products": ["Product1", "Product2"]
-    }
-    ```
-
-- **Error Response**:
-  - **Status Code**: `400 Bad Request`
-  - **Response Body**:  
-    ```json
-    {
-        "message": "Order cannot be null"
-    }
-    ```
+#### Responses
+- **201 Created**: Order created successfully.
+  - **Body**: [Order](#order-schema)
+- **400 Bad Request**: Invalid input (order cannot be null).
 
 ---
 
-## 2. Get Order by ID
+### `GET /api/orders`
+**Summary**: Retrieve all orders.
 
-- **Endpoint**: `GET /api/orders/{orderId}`
-- **Description**: Retrieves an order by its ID.
-- **Request Parameters**:
-  - `orderId`: The unique identifier of the order to retrieve.
-
-- **Response**:
-  - **Status Code**: `200 OK`
-  - **Response Body Example**:
-    ```json
-    {
-        "orderId": "64d2f6ae3f15c9a2e47a9f01",
-        "orderDate": "2024-12-03T14:30:00",
-        "customerId": "12345",
-        "paymentStatus": true,
-        "shippingStatus": false,
-        "products": ["Product1", "Product2"]
-    }
-    ```
-
-- **Error Response**:
-  - **Status Code**: `404 Not Found`
-  - **Response Body**:
-    ```json
-    {
-        "message": "Order not found"
-    }
-    ```
+#### Responses
+- **200 OK**: A list of orders.
+  - **Body**: Array of [Order](#order-schema)
 
 ---
 
-## 3. Get All Orders
+### `GET /api/orders/{orderId}`
+**Summary**: Retrieve a specific order by its ID.
 
-- **Endpoint**: `GET /api/orders`
-- **Description**: Retrieves a list of all orders.
-- **Response**:
-  - **Status Code**: `200 OK`
-  - **Response Body Example**:
-    ```json
-    [
-        {
-            "orderId": "64d2f6ae3f15c9a2e47a9f01",
-            "orderDate": "2024-12-03T14:30:00",
-            "customerId": "12345",
-            "paymentStatus": true,
-            "shippingStatus": false,
-            "products": ["Product1", "Product2"]
-        },
-        {
-            "orderId": "64d2f6ae3f15c9a2e47a9f02",
-            "orderDate": "2024-12-04T10:15:00",
-            "customerId": "67890",
-            "paymentStatus": false,
-            "shippingStatus": false,
-            "products": ["Product3"]
-        }
-    ]
-    ```
+#### Path Parameters
+- `orderId` (string): The ID of the order to retrieve.
+
+#### Responses
+- **200 OK**: The requested order.
+  - **Body**: [Order](#order-schema)
+- **404 Not Found**: Order not found.
 
 ---
 
-## 4. Delete an Order
+### `PUT /api/orders/{orderId}`
+**Summary**: Update an existing order.
 
-- **Endpoint**: `DELETE /api/orders/{orderId}`
-- **Description**: Deletes an order by its ID.
-- **Request Parameters**:
-  - `orderId`: The unique identifier of the order to delete.
+#### Path Parameters
+- `orderId` (string): The ID of the order to update.
 
-- **Response**:
-  - **Status Code**: `204 No Content`
-  - **Response Body**: Empty (No content).
+#### Request Body
+- **Content-Type**: `application/json`
+- **Schema**: [Order](#order-schema)
 
-- **Error Response**:
-  - **Status Code**: `404 Not Found`
-  - **Response Body**:
-    ```json
-    {
-        "message": "Order not found"
-    }
-    ```
+#### Responses
+- **200 OK**: Order updated successfully.
+  - **Body**: [Order](#order-schema)
+- **400 Bad Request**: Invalid input (order cannot be null).
+- **404 Not Found**: Order not found.
 
 ---
 
-## 5. Update an Order
+### `DELETE /api/orders/{orderId}`
+**Summary**: Delete an order.
 
-- **Endpoint**: `PUT /api/orders/{orderId}`
-- **Description**: Updates an existing order by its ID.
-- **Request Parameters**:
-  - `orderId`: The unique identifier of the order to update.
+#### Path Parameters
+- `orderId` (string): The ID of the order to delete.
 
-- **Request Body**:  
-  - **Content-Type**: `application/json`
-  - **Body Example**:  
-    ```json
-    {
-        "orderDate": "2024-12-03T14:30:00",
-        "customerId": "12345",
-        "paymentStatus": true,
-        "shippingStatus": true,
-        "products": ["Product1", "Product2", "Product4"]
-    }
-    ```
-
-- **Response**:
-  - **Status Code**: `200 OK`
-  - **Response Body Example**:
-    ```json
-    {
-        "orderId": "64d2f6ae3f15c9a2e47a9f01",
-        "orderDate": "2024-12-03T14:30:00",
-        "customerId": "12345",
-        "paymentStatus": true,
-        "shippingStatus": true,
-        "products": ["Product1", "Product2", "Product4"]
-    }
-    ```
-
-- **Error Responses**:
-  - **400 Bad Request**: If the order body is null or invalid.
-    ```json
-    {
-        "message": "Order cannot be null"
-    }
-    ```
-  - **404 Not Found**: If the order with the specified `orderId` is not found.
-    ```json
-    {
-        "message": "Order not found"
-    }
-    ```
+#### Responses
+- **204 No Content**: Order deleted successfully.
+- **404 Not Found**: Order not found.
 
 ---
 
-## Summary
+## Schemas
 
-- **POST /api/orders** - Creates a new order.
-- **GET /api/orders/{orderId}** - Retrieves an order by ID.
-- **GET /api/orders** - Retrieves all orders.
-- **DELETE /api/orders/{orderId}** - Deletes an order by ID.
-- **PUT /api/orders/{orderId}** - Updates an existing order by ID.
+### Order Schema
+| Field                 | Type               | Description                                    |
+| --------------------- | ------------------ | ---------------------------------------------- |
+| `id`                  | string             | Unique identifier for the order.               |
+| `orderDate`           | string (date-time) | Date and time when the order was placed.       |
+| `customerId`          | string             | ID of the customer who placed the order.       |
+| `paymentMethod`       | string             | Payment method used for the order.             |
+| `isPaid`              | boolean            | Indicates whether the order has been paid.     |
+| `vipStatus`           | boolean            | Indicates whether the customer has VIP status. |
+| `products`            | array              | List of products in the order.                 |
+| `products[].id`       | string             | Unique identifier for the product.             |
+| `products[].name`     | string             | Name of the product.                           |
+| `products[].price`    | number (decimal)   | Price of the product.                          |
+| `products[].quantity` | integer            | Quantity of the product in the order.          |
+
+### Product Schema
+| Field      | Type             | Description                        |
+| ---------- | ---------------- | ---------------------------------- |
+| `id`       | string           | Unique identifier for the product. |
+| `name`     | string           | Name of the product.               |
+| `price`    | number (decimal) | Price of the product.              |
+| `quantity` | integer          | Available quantity of the product. |
+
+---
+
+## Notes
+- Ensure all required fields are included in requests.
+- Use appropriate HTTP status codes to handle errors and success cases.
+- For sensitive operations, consider implementing authentication and authorization.
